@@ -1,5 +1,9 @@
 import { Building2, ClipboardList } from "lucide-react";
 import PageMeta from "../../components/common/PageMeta";
+import EcommerceMetrics from "../../components/ecommerce/EcommerceMetrics";
+import MonthlySalesChart from "../../components/ecommerce/MonthlySalesChart";
+import MonthlyTarget from "../../components/ecommerce/MonthlyTarget";
+import StatisticsChart from "../../components/ecommerce/StatisticsChart";
 
 export default function Home() {
   return (
@@ -9,33 +13,48 @@ export default function Home() {
         description="Manage your rental services efficiently — track properties, clients, and operations all in one place."
       />
 
-      <div className="flex flex-col items-center justify-center text-center min-h-[70vh] px-4">
-        {/* Icon */}
-        <div className="bg-primary/10 p-4 rounded-full mb-4">
-          <Building2 className="w-10 h-10 text-primary" />
+      {/* Heading Section */}
+      <section className="mb-8 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
+        <div className="flex flex-col gap-2">
+          {/* Heading with icon */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <Building2 className="w-8 h-8 text-[#465FFF]" />
+            <h1 className="text-3xl font-extrabold text-[#465FFF] whitespace-nowrap">
+              Rental Services Admin
+            </h1>
+          </div>
+
+          {/* Paragraph with icon below heading */}
+          <div className="flex items-start gap-2 text-gray-600 dark:text-gray-400 max-w-xl">
+            <p className="text-base sm:text-lg leading-relaxed">
+              Manage rental properties, monitor tenant requests, and handle
+              operations seamlessly — all from one dashboard.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Main content grid */}
+      <div className="grid grid-cols-12 gap-4 md:gap-6 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
+        <div className="col-span-12 space-y-6 xl:col-span-7">
+          <EcommerceMetrics />
+          <MonthlySalesChart />
         </div>
 
-        {/* Heading */}
-        <h1 className="text-3xl font-bold text-[#465FFF] mb-2">
-          Welcome to Rental Services Admin
-        </h1>
+        <div className="col-span-12 xl:col-span-5">
+          <MonthlyTarget />
+        </div>
 
-        {/* Subheading */}
-        <p className="text-gray-600 max-w-xl mb-6">
-          Manage rental properties, monitor tenant requests, and handle
-          operations seamlessly — all from one dashboard.
-        </p>
+        <div className="col-span-12">
+          <StatisticsChart />
+        </div>
 
-        {/* Example Action Buttons */}
-        {/* <div className="flex gap-4">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
-            <Building2 className="w-4 h-4" />
-            Manage Properties
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
-            <ClipboardList className="w-4 h-4" />
-            View Reports
-          </button>
+        {/* <div className="col-span-12 xl:col-span-5">
+          <DemographicCard />
+        </div>
+
+        <div className="col-span-12 xl:col-span-7">
+          <RecentOrders />
         </div> */}
       </div>
     </>

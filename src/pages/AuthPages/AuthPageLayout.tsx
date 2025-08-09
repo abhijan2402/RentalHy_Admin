@@ -2,6 +2,7 @@ import React from "react";
 import GridShape from "../../components/common/GridShape";
 import { Link } from "react-router";
 import ThemeTogglerTwo from "../../components/common/ThemeTogglerTwo";
+import { Warehouse } from "lucide-react";
 
 export default function AuthLayout({
   children,
@@ -18,21 +19,27 @@ export default function AuthLayout({
             <GridShape />
             <div className="flex flex-col items-center max-w-xs">
               <Link to="/" className="block mb-4">
-                <img
+                {/* <img
                   width={231}
                   height={48}
                   src="/images/logo/auth-logo.svg"
                   alt="Logo"
-                />
+                /> */}
+                <div className="flex items-center gap-2 text-primary font-bold text-xl">
+                  <Warehouse className="h-8 w-8 text-primary  text-[#FFF]" />
+                  <span className="tracking-wide text-4xl text-[#FFF] ">
+                    Rental Admin
+                  </span>
+                </div>
               </Link>
               <p className="text-center text-gray-400 dark:text-white/60">
-                Free and Open-Source Tailwind CSS Admin Dashboard Template
+                The Ultimate Controller for Your Rental Application.
               </p>
             </div>
           </div>
         </div>
         <div className="fixed z-50 hidden bottom-6 right-6 sm:block">
-          <ThemeTogglerTwo />
+          {/* <ThemeTogglerTwo /> */}
         </div>
       </div>
     </div>
