@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Table, Button, Switch, Image, message } from "antd";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import { render } from "@fullcalendar/core/preact";
 
 const initialProperties = [
   {
@@ -8,6 +9,8 @@ const initialProperties = [
     name: "Luxury Villa",
     owner: "John Doe",
     status: "Disapproved",
+    location: "Hyderabad",
+    address: "Plot No. 12, Jubilee Hills, Hyderabad, Telangana, India",
     enabled: true,
     highlighted: true,
     image:
@@ -18,6 +21,9 @@ const initialProperties = [
     name: "Downtown Apartment",
     owner: "Jane Smith",
     status: "Approved",
+    location: "Mumbai",
+    address:
+      "Flat 402, Marine Drive Apartments, Churchgate, Mumbai, Maharashtra, India",
     enabled: false,
     highlighted: false,
     image:
@@ -28,6 +34,8 @@ const initialProperties = [
     name: "Beach House",
     owner: "Michael Johnson",
     status: "Disapproved",
+    location: "Goa",
+    address: "Villa No. 8, Candolim Beach Road, North Goa, Goa, India",
     enabled: true,
     highlighted: true,
     image:
@@ -81,6 +89,22 @@ const Property = () => {
       title: "Owner",
       dataIndex: "owner",
       key: "owner",
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+      render: (value: string) => <div>{value || "Hyderabad"}</div>,
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      render: (value: string) => (
+        <div style={{maxWidth:"200px"}}>
+          {value || "Plot No. 12, Jubilee Hills, Hyderabad, Telangana, India"}
+        </div>
+      ),
     },
     {
       title: "Status",
@@ -152,7 +176,7 @@ const Property = () => {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Property" />
+      <PageBreadcrumb pageTitle="Rent" />
       <Table
         columns={columns}
         dataSource={properties}
@@ -162,7 +186,7 @@ const Property = () => {
           showSizeChanger: true,
           defaultPageSize: 5,
         }}
-        scroll={{ x: "max-content" }}
+        scroll={{ x: 1000 }}
       />
     </div>
   );

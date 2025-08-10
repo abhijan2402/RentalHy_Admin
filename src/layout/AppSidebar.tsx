@@ -36,7 +36,7 @@ const navItems: NavItem[] = [
   },
   {
     icon: <TableProperties />,
-    name: "Property",
+    name: "Rent",
     path: "/property",
   },
   {
