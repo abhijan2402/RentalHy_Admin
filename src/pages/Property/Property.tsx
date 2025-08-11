@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Table, Button, Switch, Image, message } from "antd";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import { render } from "@fullcalendar/core/preact";
+import AddPropertyModal from "./AddPropertyModal";
 
 const initialProperties = [
   {
@@ -29,22 +29,11 @@ const initialProperties = [
     image:
       "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=100&q=80",
   },
-  {
-    id: 3,
-    name: "Beach House",
-    owner: "Michael Johnson",
-    status: "Disapproved",
-    location: "Goa",
-    address: "Villa No. 8, Candolim Beach Road, North Goa, Goa, India",
-    enabled: true,
-    highlighted: true,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRow6C28QNwYhJEb3MZnU-VcSyB2qoPuoDy8WkC_0GLwkTbpo2wlHqBTHQmA7Ske1SMJIg&usqp=CAU",
-  },
 ];
 
 const Property = () => {
   const [properties, setProperties] = useState(initialProperties);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleEnable = (id: number) => {
     setProperties((prev) =>
@@ -64,13 +53,21 @@ const Property = () => {
     message.success("Property highlighted status changed");
   };
 
-  const changeStatus = (id: any, newStatus: string) => {
+  const changeStatus = (id: number, newStatus: string) => {
     setProperties((prev) =>
       prev.map((prop) =>
         prop.id === id ? { ...prop, status: newStatus } : prop
       )
     );
     message.success(`Property status changed to ${newStatus}`);
+  };
+
+  const handleAddProperty = (newProperty: any) => {
+    setProperties((prev) => [
+      ...prev,
+      { ...newProperty, id: Date.now() }, // unique ID
+    ]);
+    message.success("Property added successfully");
   };
 
   const columns = [
@@ -80,16 +77,8 @@ const Property = () => {
       key: "image",
       render: (url: string) => <Image width={80} src={url} alt="Property" />,
     },
-    {
-      title: "Property Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Owner",
-      dataIndex: "owner",
-      key: "owner",
-    },
+    { title: "Property Name", dataIndex: "name", key: "name" },
+    { title: "Owner", dataIndex: "owner", key: "owner" },
     {
       title: "Location",
       dataIndex: "location",
@@ -100,11 +89,7 @@ const Property = () => {
       title: "Address",
       dataIndex: "address",
       key: "address",
-      render: (value: string) => (
-        <div style={{maxWidth:"200px"}}>
-          {value || "Plot No. 12, Jubilee Hills, Hyderabad, Telangana, India"}
-        </div>
-      ),
+      render: (value: string) => <div className="max-w-[200px]">{value}</div>,
     },
     {
       title: "Status",
@@ -135,12 +120,12 @@ const Property = () => {
       ),
     },
     {
-      title: "Highligthed",
+      title: "Highlighted",
       dataIndex: "highlighted",
       key: "highlighted",
-      render: (highligthed: any, record: any) => (
+      render: (highlighted: any, record: any) => (
         <Switch
-          checked={highligthed}
+          checked={highlighted}
           onChange={() => toggleHighlighted(record.id)}
           checkedChildren="Enabled"
           unCheckedChildren="Disabled"
@@ -176,7 +161,19 @@ const Property = () => {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Rent" />
+      <PageBreadcrumb pageTitle="Rental Properties" />
+
+      {/* Add Button */}
+      <div className="flex justify-end mb-4">
+        <Button
+          type="primary"
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => setIsModalOpen(true)}
+        >
+          + Add Property
+        </Button>
+      </div>
+
       <Table
         columns={columns}
         dataSource={properties}
@@ -187,6 +184,13 @@ const Property = () => {
           defaultPageSize: 5,
         }}
         scroll={{ x: 1000 }}
+      />
+
+      {/* Modal */}
+      <AddPropertyModal
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onAdd={handleAddProperty}
       />
     </div>
   );
