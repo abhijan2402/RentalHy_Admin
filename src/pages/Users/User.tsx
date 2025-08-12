@@ -8,36 +8,47 @@ import {
   Form,
   Input,
   Select,
+  Tag,
 } from "antd";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 
 const { Option } = Select;
 
 const initialUsers = [
-  { id: 1, name: "John Doe", email: "john@example.com", role: "Admin" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User" },
+  {
+    id: 1,
+    name: "John Doe",
+    email: "john@example.com",
+    role: "Admin",
+    status: "Active",
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    email: "jane@example.com",
+    role: "User",
+    status: "Inactive",
+  },
   {
     id: 3,
     name: "Michael Johnson",
     email: "michael@example.com",
     role: "User",
+    status: "Active",
   },
-  { id: 4, name: "Emily Davis", email: "emily@example.com", role: "Moderator" },
-  { id: 5, name: "William Brown", email: "william@example.com", role: "User" },
-  { id: 6, name: "Linda Wilson", email: "linda@example.com", role: "Admin" },
-  { id: 7, name: "David Miller", email: "david@example.com", role: "User" },
-  { id: 8, name: "Susan Moore", email: "susan@example.com", role: "User" },
   {
-    id: 9,
-    name: "Robert Taylor",
-    email: "robert@example.com",
+    id: 4,
+    name: "Emily Davis",
+    email: "emily@example.com",
     role: "Moderator",
+    status: "Active",
   },
   {
-    id: 10,
-    name: "Patricia Anderson",
-    email: "patricia@example.com",
+    id: 5,
+    name: "William Brown",
+    email: "william@example.com",
     role: "User",
+    status: "Inactive",
   },
 ];
 
@@ -49,6 +60,20 @@ const User = () => {
   const handleDelete = (id: number) => {
     setUsers((prev) => prev.filter((user) => user.id !== id));
     message.success("User deleted successfully");
+  };
+
+  const handleToggleStatus = (id: number) => {
+    setUsers((prev) =>
+      prev.map((user) =>
+        user.id === id
+          ? {
+              ...user,
+              status: user.status === "Active" ? "Inactive" : "Active",
+            }
+          : user
+      )
+    );
+    message.success("User status updated");
   };
 
   const handleAddUser = () => {
@@ -85,19 +110,48 @@ const User = () => {
       onFilter: (value: any, record: any) => record.role === value,
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      filters: [
+        { text: "Active", value: "Active" },
+        { text: "Inactive", value: "Inactive" },
+      ],
+      onFilter: (value: any, record: any) => record.status === value,
+      render: (status: string) => (
+        <Tag color={status === "Active" ? "green" : "volcano"}>{status}</Tag>
+      ),
+    },
+    {
       title: "Action",
       key: "action",
       render: (_: any, record: any) => (
-        <Popconfirm
-          title="Are you sure to delete this user?"
-          onConfirm={() => handleDelete(record.id)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button danger type="link">
-            Delete
+        <div style={{ display: "flex", gap: "8px" }}>
+          <Button
+            type="default"
+            style={{
+              backgroundColor:
+                record.status === "Inactive" ? "#00A86B" : "#E23D28",
+              color: "white",
+              width: "100px",
+            }}
+            onClick={() => handleToggleStatus(record.id)}
+          >
+            {record.status === "Active" ? "Deactivate" : "Activate"}
           </Button>
-        </Popconfirm>
+          <Popconfirm
+            title="Are you sure to delete this user?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              style={{ backgroundColor: "red", color: "white", width: "100px" }}
+              type="link"
+            >
+              Delete
+            </Button>
+          </Popconfirm>
+        </div>
       ),
     },
   ];
@@ -108,7 +162,6 @@ const User = () => {
 
       {/* Add Button */}
       <div className="flex justify-end mb-4">
-        {" "}
         <Button
           type="primary"
           onClick={() => setIsModalOpen(true)}
@@ -137,7 +190,7 @@ const User = () => {
         onCancel={() => setIsModalOpen(false)}
         onOk={handleAddUser}
         okText="Add"
-        zIndex={10000} // stays above topbar
+        zIndex={10000}
       >
         <Form form={form} layout="vertical">
           <Form.Item
@@ -168,6 +221,18 @@ const User = () => {
               <Option value="Admin">Admin</Option>
               <Option value="User">User</Option>
               <Option value="Moderator">Moderator</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="status"
+            label="Status"
+            initialValue="Active"
+            rules={[{ required: true, message: "Please select status" }]}
+          >
+            <Select placeholder="Select status">
+              <Option value="Active">Active</Option>
+              <Option value="Inactive">Inactive</Option>
             </Select>
           </Form.Item>
         </Form>
