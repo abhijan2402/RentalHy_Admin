@@ -13,6 +13,7 @@ import User from "./pages/Users/User";
 import Property from "./pages/Property/Property";
 import Ads from "./pages/Ads/Ads";
 import Tickets from "./pages/Tickets/Tickets";
+import ForgotPassword from "./pages/AuthPages/ForgotPassword";
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
           {/* Auth Layout */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/reset-password" element={<ForgotPassword />} />
 
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />

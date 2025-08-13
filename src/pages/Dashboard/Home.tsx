@@ -36,26 +36,17 @@ export default function Home() {
 
       {/* Main content grid */}
       <div className="grid grid-cols-12 gap-4 md:gap-6 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
-        <div className="col-span-12 space-y-6 xl:col-span-7">
+        <div className="col-span-12 space-y-6">
           <EcommerceMetrics />
+        </div>
+
+        <div className="col-span-12 ">
           <MonthlySalesChart />
         </div>
 
-        <div className="col-span-12 xl:col-span-5">
-          <MonthlyTarget />
-        </div>
-
         <div className="col-span-12">
-          <StatisticsChart />
+          {/* <StatisticsChart /> */}
         </div>
-
-        {/* <div className="col-span-12 xl:col-span-5">
-          <DemographicCard />
-        </div>
-
-        <div className="col-span-12 xl:col-span-7">
-          <RecentOrders />
-        </div> */}
       </div>
     </>
   );
