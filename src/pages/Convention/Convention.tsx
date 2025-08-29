@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Table, Button, Switch, Image, message } from "antd";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import AddPropertyModal from "./AddPropertyModal";
 import { useGetPropertiesQuery } from "../../redux/api/propertyApi";
-
+import AddPropertyModal from "../Property/AddPropertyModal";
 
 const initialProperties = [
   {
@@ -33,10 +32,10 @@ const initialProperties = [
   },
 ];
 
-const Property = () => {
+const Convention = () => {
   const { data, error, isLoading, isFetching } = useGetPropertiesQuery();
 
-  console.log(data)
+  console.log(data);
   const [properties, setProperties] = useState(initialProperties);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -166,10 +165,10 @@ const Property = () => {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Rental Properties" />
+      <PageBreadcrumb pageTitle="Convention Space" />
 
       {/* Add Button */}
-      <div className="flex justify-end mb-4">
+      {/* <div className="flex justify-end mb-4">
         <Button
           type="primary"
           className="bg-blue-600 hover:bg-blue-700"
@@ -177,7 +176,7 @@ const Property = () => {
         >
           + Add Property
         </Button>
-      </div>
+      </div> */}
 
       <Table
         columns={columns}
@@ -201,4 +200,4 @@ const Property = () => {
   );
 };
 
-export default Property;
+export default Convention;

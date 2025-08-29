@@ -6,8 +6,18 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import {
+  useGetAdsQuery,
+  useAddAdMutation,
+  useDeleteAdMutation,
+} from "../../redux/api/AdsApi";
+import { toast } from "react-toastify";
 
 const Ads = () => {
+  const { data, error, isLoading, isFetching, refetch } = useGetAdsQuery();
+  const [addAd] = useAddAdMutation();
+  const [deleteAd] = useDeleteAdMutation();
+  console.log(data?.data);
   const [ads, setAds] = useState([
     // Initial dummy ads with image URLs
     {
@@ -20,24 +30,62 @@ const Ads = () => {
     },
   ]);
 
+  // Formater
+  function filtersToFormData(
+    files: Record<string, any>,
+    useIndexedKeys: boolean = true // 👈 toggle between images[0] or images[]
+  ) {
+    const formData = new FormData();
+
+    for (const key in files) {
+      if (!Object.prototype.hasOwnProperty.call(files, key)) continue;
+
+      const value = files[key];
+
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          if (useIndexedKeys) {
+            // images[0], images[1] ...
+            formData.append(`${key}[${index}]`, item);
+          } else {
+            // images[], images[] ...
+            formData.append(`${key}[]`, item);
+          }
+        });
+      } else if (value !== undefined && value !== null && value !== "") {
+        formData.append(key, value);
+      }
+    }
+
+    return formData;
+  }
+
   // Add image handler from Upload component
-  const handleAdd = ( file:any) => {
-    // Simulate upload and add to ads list
+  const handleAdd = async (file: any) => {
     if (!file) return;
 
-    // Create a local URL for preview
-    const newAd = {
-      id: Date.now(),
-      url: URL.createObjectURL(file),
-    };
-    setAds((prev) => [newAd, ...prev]);
-    message.success("Ad banner added!");
+    const formData = filtersToFormData({ images: [file] }, true);
+
+    await addAd(formData)
+      .unwrap()
+      .then(() => {
+        toast.success("Ads Banner added Successfully!");
+      })
+      .catch(() => {
+        toast.error("Failed to add Ads banner");
+      });
   };
 
   // Delete ad by id
-  const handleDelete = (id:any) => {
-    setAds((prev) => prev.filter((ad) => ad.id !== id));
-    message.success("Ad banner deleted!");
+  const handleDelete = (id: any) => {
+    deleteAd(id)
+      .unwrap()
+      .then(() => {
+        message.success("Ad deleted!");
+      })
+      .catch(() => {
+        message.error("Failed to delete ad");
+      });
   };
 
   return (
@@ -49,7 +97,7 @@ const Ads = () => {
         showUploadList={false}
         beforeUpload={(file) => {
           // Prevent auto upload, we'll handle manually
-          handleAdd({ file });
+          handleAdd(file);
           return false; // prevent upload
         }}
       >
@@ -63,7 +111,7 @@ const Ads = () => {
       </Upload>
 
       <Row gutter={[16, 16]}>
-        {ads.map(({ id, url }) => (
+        {data?.data?.map(({ id, full_path }) => (
           <Col key={id} xs={24} sm={12} md={8} lg={6}>
             <div
               style={{
@@ -75,7 +123,7 @@ const Ads = () => {
               }}
             >
               <Image
-                src={url}
+                src={full_path}
                 alt={`Ad banner ${id}`}
                 style={{ maxWidth: "100%", maxHeight: 150 }}
               />

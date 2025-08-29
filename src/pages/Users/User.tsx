@@ -9,8 +9,17 @@ import {
   Input,
   Select,
   Tag,
+  Avatar,
+  Tooltip,
+  Image,
 } from "antd";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
+import {
+  useGetUsersQuery,
+  useDeleteUserMutation,
+  useUpdateUserStatusMutation,
+} from "../../redux/api/UserApi.js";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 
@@ -56,26 +65,41 @@ const User = () => {
   const [users, setUsers] = useState(initialUsers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const { data, error, isLoading, isFetching, refetch } = useGetUsersQuery();
+  const [deleteUser] = useDeleteUserMutation();
+  const [updateUserStatus] = useUpdateUserStatusMutation();
+  console.log(data);
 
-  const handleDelete = (id: number) => {
-    setUsers((prev) => prev.filter((user) => user.id !== id));
-    message.success("User deleted successfully");
+  // Deletuser Handler
+  const handleDelete = (id: string) => {
+    const formdata = new FormData();
+    formdata.append("status", id);
+    deleteUser(formdata)
+      .unwrap()
+      .then(() => {
+        toast.success("User Deleted Successfully!");
+      })
+      .catch(() => {
+        toast.error("Failed to Delete the User.");
+      });
   };
 
+  // ToggleStatus Handler
   const handleToggleStatus = (id: number) => {
-    setUsers((prev) =>
-      prev.map((user) =>
-        user.id === id
-          ? {
-              ...user,
-              status: user.status === "Active" ? "Inactive" : "Active",
-            }
-          : user
-      )
-    );
-    message.success("User status updated");
+    const statusId = String(id);
+    const formdata = new FormData();
+    formdata.append("status", statusId);
+    updateUserStatus(formdata)
+      .unwrap()
+      .then(() => {
+        toast.success("Status changed successfully!");
+      })
+      .catch(() => {
+        toast.error("Faild to change the staus.");
+      });
   };
 
+  // Add User Handler
   const handleAddUser = () => {
     form.validateFields().then((values) => {
       const newUser = {
@@ -91,8 +115,19 @@ const User = () => {
 
   const columns = [
     {
+      title: "Avatar",
+      dataIndex: "image",
+      key: "avatar",
+      render: (imageUrl: string) => <Avatar src={imageUrl} size={40} />,
+    },
+    {
       title: "Name",
       dataIndex: "name",
+      sorter: (a: any, b: any) => a.name.localeCompare(b.name),
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
       sorter: (a: any, b: any) => a.name.localeCompare(b.name),
     },
     {
@@ -100,25 +135,54 @@ const User = () => {
       dataIndex: "email",
     },
     {
-      title: "Role",
-      dataIndex: "role",
-      filters: [
-        { text: "Admin", value: "Admin" },
-        { text: "User", value: "User" },
-        { text: "Moderator", value: "Moderator" },
-      ],
-      onFilter: (value: any, record: any) => record.role === value,
+      title: "Phone",
+      dataIndex: "phone_number",
     },
     {
+      title: "Documents Front",
+      dataIndex: "documents_front",
+      width: 180,
+      render: (docUrl: string) => (
+        <Image
+          width={80}
+          src={`https://hotpink-rook-901841.hostingersite.com/public/${docUrl}`}
+          preview={{
+            src: `https://hotpink-rook-901841.hostingersite.com/public/${docUrl}`,
+          }}
+          alt="Front Document"
+          style={{ cursor: "pointer" }}
+        />
+      ),
+    },
+    {
+      title: "Documents Back",
+      dataIndex: "documents_back",
+      width: 180,
+      render: (docUrl: string) => (
+        <Image
+          width={80}
+          src={`https://hotpink-rook-901841.hostingersite.com/public/${docUrl}`}
+          preview={{
+            src: `https://hotpink-rook-901841.hostingersite.com/public/${docUrl}`,
+          }}
+          alt="Back Document"
+          style={{ cursor: "pointer" }}
+        />
+      ),
+    },
+
+    {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "is_active",
       filters: [
-        { text: "Active", value: "Active" },
-        { text: "Inactive", value: "Inactive" },
+        { text: "Active", value: 1 },
+        { text: "Inactive", value: 0 },
       ],
-      onFilter: (value: any, record: any) => record.status === value,
-      render: (status: string) => (
-        <Tag color={status === "Active" ? "green" : "volcano"}>{status}</Tag>
+      onFilter: (value: any, record: any) => record.is_active === value,
+      render: (isActive: number) => (
+        <Tag color={isActive === 1 ? "green" : "volcano"}>
+          {isActive === 1 ? "Active" : "Inactive"}
+        </Tag>
       ),
     },
     {
@@ -140,7 +204,7 @@ const User = () => {
           </Button>
           <Popconfirm
             title="Are you sure to delete this user?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDelete(String(record.id))}
             okText="Yes"
             cancelText="No"
           >
@@ -161,7 +225,7 @@ const User = () => {
       <PageBreadcrumb pageTitle="Users" />
 
       {/* Add Button */}
-      <div className="flex justify-end mb-4">
+      {/* <div className="flex justify-end mb-4">
         <Button
           type="primary"
           onClick={() => setIsModalOpen(true)}
@@ -169,18 +233,18 @@ const User = () => {
         >
           + Add User
         </Button>
-      </div>
+      </div> */}
 
       <Table
         columns={columns}
-        dataSource={users}
+        dataSource={data?.data}
         rowKey="id"
         pagination={{
           pageSizeOptions: ["5", "10", "15"],
           showSizeChanger: true,
           defaultPageSize: 5,
         }}
-        scroll={{ x: "max-content" }}
+        scroll={{ x: 1000 }}
       />
 
       {/* Add User Modal */}

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   GridIcon,
   TableIcon,
@@ -9,7 +9,18 @@ import {
   PaperPlaneIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
-import { TableProperties, Ticket, TvIcon, User, Warehouse } from "lucide-react";
+import {
+  Building2,
+  LogOut,
+  LogOutIcon,
+  TableProperties,
+  Ticket,
+  TvIcon,
+  User,
+  Warehouse,
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 type NavItem = {
   name: string;
@@ -40,6 +51,11 @@ const navItems: NavItem[] = [
     path: "/property",
   },
   {
+    icon: <Building2 />,
+    name: "Convention Space",
+    path: "/convention",
+  },
+  {
     icon: <TvIcon />,
     name: "Ads",
     path: "/ads",
@@ -52,13 +68,21 @@ const navItems: NavItem[] = [
 ];
 
 const AppSidebar: React.FC = () => {
-  const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
+  const { logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const [openSubmenu, setOpenSubmenu] = useState<number | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
     {}
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const handleLogout = () => {
+    logout();
+    navigate("/signin");
+    toast.success("Logged out Successfully..!");
+  };
 
   const isActive = useCallback(
     (path: string) => location.pathname === path,
@@ -143,7 +167,7 @@ const AppSidebar: React.FC = () => {
 
       {/* Main Menu */}
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
-        <nav>
+        <nav className="h-[650px] flex flex-col">
           <h2
             className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
               !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
@@ -252,6 +276,27 @@ const AppSidebar: React.FC = () => {
               </li>
             ))}
           </ul>
+          <div className="mt-auto px-0">
+            <button
+              onClick={handleLogout}
+              className={`menu-item border mb-4 group cursor-pointer w-full flex items-center gap-3 px-4 py-2 rounded-lg ${
+                isExpanded || isHovered || isMobileOpen
+                  ? "justify-start text-gray-900 hover:bg-[#FF0800] hover:text-white transition-all"
+                  : "justify-center"
+              }`}
+            >
+              <LogOutIcon
+                className={`menu-item-icon-size ${
+                  isExpanded || isHovered || isMobileOpen
+                    ? "text-gray-900 "
+                    : "text-gray-800"
+                }`}
+              />
+              {(isExpanded || isHovered || isMobileOpen) && (
+                <span className="menu-item-text">Logout</span>
+              )}
+            </button>
+          </div>
         </nav>
       </div>
     </aside>

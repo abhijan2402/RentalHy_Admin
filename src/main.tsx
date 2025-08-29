@@ -6,13 +6,24 @@ import "flatpickr/dist/flatpickr.css";
 import App from "./App";
 import { AppWrapper } from "./components/common/PageMeta";
 import { ThemeProvider } from "./context/ThemeContext";
+import { Provider } from "react-redux";
+import { store } from "./redux/store/store.js";
+import { AuthProvider } from "./context/AuthContext";
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CustomToastContainer } from "./components/CustomToastContainer/CustomToastContainer";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider>
-      <AppWrapper>
-        <App />
-      </AppWrapper>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <Provider store={store}>
+          <AppWrapper>
+            <CustomToastContainer />
+            <App />
+          </AppWrapper>
+        </Provider>
+      </ThemeProvider>
+    </AuthProvider>
   </StrictMode>
 );
