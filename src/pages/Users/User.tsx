@@ -20,6 +20,7 @@ import {
   useUpdateUserStatusMutation,
 } from "../../redux/api/UserApi.js";
 import { toast } from "react-toastify";
+import { SidebarProvider, useSidebar } from "../../context/SidebarContext";
 
 const { Option } = Select;
 
@@ -62,6 +63,7 @@ const initialUsers = [
 ];
 
 const User = () => {
+  const { isExpanded, isHovered, isMobileOpen } = useSidebar();
   const [users, setUsers] = useState(initialUsers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -141,7 +143,7 @@ const User = () => {
     {
       title: "Documents Front",
       dataIndex: "documents_front",
-      width: 180,
+      width: 200,
       render: (docUrl: string) => (
         <Image
           width={80}
@@ -157,10 +159,10 @@ const User = () => {
     {
       title: "Documents Back",
       dataIndex: "documents_back",
-      width: 180,
+      width: 200,
       render: (docUrl: string) => (
         <Image
-          width={80}
+          width={100}
           src={`https://hotpink-rook-901841.hostingersite.com/public/${docUrl}`}
           preview={{
             src: `https://hotpink-rook-901841.hostingersite.com/public/${docUrl}`,
@@ -221,7 +223,17 @@ const User = () => {
   ];
 
   return (
-    <div>
+    <div
+      // className="main-content"
+      style={{
+        // overflowX: "auto",
+        // transition: "margin-left 0.3s",
+        marginLeft: isExpanded || isHovered ? 0 : 0,
+        // width: `calc(100vw - ${isExpanded || isHovered ? 290 : 90}px)`,
+        // width: `${isExpanded}`,
+        width: isExpanded || isHovered ? "1180px" : "",
+      }}
+    >
       <PageBreadcrumb pageTitle="Users" />
 
       {/* Add Button */}
@@ -235,17 +247,19 @@ const User = () => {
         </Button>
       </div> */}
 
-      <Table
-        columns={columns}
-        dataSource={data?.data}
-        rowKey="id"
-        pagination={{
-          pageSizeOptions: ["5", "10", "15"],
-          showSizeChanger: true,
-          defaultPageSize: 5,
-        }}
-        scroll={{ x: 1000 }}
-      />
+      <div>
+        <Table
+          columns={columns}
+          dataSource={data?.data}
+          rowKey="id"
+          pagination={{
+            pageSizeOptions: ["5", "10", "15"],
+            showSizeChanger: true,
+            defaultPageSize: 5,
+          }}
+          scroll={{ x: 1000}}
+        />
+      </div>
 
       {/* Add User Modal */}
       <Modal
