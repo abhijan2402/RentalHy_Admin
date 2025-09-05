@@ -10,6 +10,7 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import {
+  BadgeIndianRupee,
   Building2,
   LogOut,
   LogOutIcon,
@@ -64,6 +65,11 @@ const navItems: NavItem[] = [
     icon: <Ticket />,
     name: "Ticket",
     path: "/tickets",
+  },
+  {
+    icon: <BadgeIndianRupee />,
+    name: "Set Charges",
+    path: "/charges",
   },
 ];
 

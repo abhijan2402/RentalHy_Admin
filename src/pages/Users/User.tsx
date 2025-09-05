@@ -70,13 +70,11 @@ const User = () => {
   const { data, error, isLoading, isFetching, refetch } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [updateUserStatus] = useUpdateUserStatusMutation();
-  console.log(data);
+  console.log(error);
 
   // Deletuser Handler
-  const handleDelete = (id: string) => {
-    const formdata = new FormData();
-    formdata.append("status", id);
-    deleteUser(formdata)
+  const handleDelete = (id: String) => {
+    deleteUser(id)
       .unwrap()
       .then(() => {
         toast.success("User Deleted Successfully!");
@@ -85,13 +83,12 @@ const User = () => {
         toast.error("Failed to Delete the User.");
       });
   };
-
   // ToggleStatus Handler
-  const handleToggleStatus = (id: number) => {
+  const handleToggleStatus = (id: String) => {
     const statusId = String(id);
     const formdata = new FormData();
     formdata.append("status", statusId);
-    updateUserStatus(formdata)
+    updateUserStatus({ id, formdata })
       .unwrap()
       .then(() => {
         toast.success("Status changed successfully!");
@@ -257,7 +254,7 @@ const User = () => {
             showSizeChanger: true,
             defaultPageSize: 5,
           }}
-          scroll={{ x: 1000}}
+          scroll={{ x: 1000 }}
         />
       </div>
 

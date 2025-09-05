@@ -13,6 +13,7 @@ export const UserApi = createApi({
     },
   }),
   tagTypes: ["User"],
+
   endpoints: (builder) => ({
     // Add User
     addUser: builder.mutation({
@@ -32,10 +33,10 @@ export const UserApi = createApi({
 
     // Delete User
     deleteUser: builder.mutation({
-      query: (formData) => ({
-        url: `delete`,
+      query: (id) => ({
+        url: `delete/${id}`,
         method: "POST",
-        body: formData,
+        body: {},
       }),
       invalidatesTags: ["User"],
     }),
@@ -52,10 +53,10 @@ export const UserApi = createApi({
 
     // Update User Status (block/unblock)
     updateUserStatus: builder.mutation({
-      query: (formdata) => ({
-        url: `change/status`,
+      query: ({ id, formdata }) => ({
+        url: `change/status/${id}`,
         method: "POST",
-        body: formdata,
+        body: formdata ,
       }),
       invalidatesTags: ["User"],
     }),

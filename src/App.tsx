@@ -14,6 +14,7 @@ import Tickets from "./pages/Tickets/Tickets";
 import ForgotPassword from "./pages/AuthPages/ForgotPassword";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Convention from "./pages/Convention/Convention";
+import Charges from "./pages/Chargers/Charges";
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
           <Route index path="/convention" element={<Convention />} />
           <Route index path="/ads" element={<Ads />} />
           <Route index path="/tickets" element={<Tickets />} />
+          <Route index path="/charges" element={<Charges />} />
 
           {/* Others Page */}
           <Route path="/profile" element={<UserProfiles />} />
