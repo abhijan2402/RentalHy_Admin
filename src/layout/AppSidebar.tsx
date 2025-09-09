@@ -14,6 +14,7 @@ import {
   Building2,
   LogOut,
   LogOutIcon,
+  Settings,
   TableProperties,
   Ticket,
   TvIcon,
@@ -70,6 +71,11 @@ const navItems: NavItem[] = [
     icon: <BadgeIndianRupee />,
     name: "Set Charges",
     path: "/charges",
+  },
+  {
+    icon: <Settings />,
+    name: "CMS",
+    path: "/cms",
   },
 ];
 

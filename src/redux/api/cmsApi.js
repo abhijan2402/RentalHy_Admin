@@ -5,13 +5,20 @@ export const cmsApi = createApi({
   reducerPath: "cmsApi",
   baseQuery: fetchBaseQuery({
     baseUrl: baseUrl,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["cms"],
   endpoints: (builder) => ({
     // ✅ Fetch CMS page content by slug & user_type
     getCms: builder.query({
-      query: ({ slug, user_type }) => ({
-        url: `admin/cms-page/${slug}/${user_type}`,
+      query: ({ page }) => ({
+        url: `cms/${page}`,
         method: "GET",
       }),
       providesTags: ["cms"],
@@ -19,10 +26,10 @@ export const cmsApi = createApi({
 
     // update cms
     editCms: builder.mutation({
-      query: (csmdata) => ({
-        url: "admin/cms-page-update",
+      query: ({ formdata, page }) => ({
+        url: `cms/${page}`,
         method: "POST",
-        body: csmdata,
+        body: formdata,
       }),
       invalidatesTags: ["cms"],
     }),

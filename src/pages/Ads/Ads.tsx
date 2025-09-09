@@ -12,6 +12,8 @@ import {
   useDeleteAdMutation,
 } from "../../redux/api/AdsApi";
 import { toast } from "react-toastify";
+import { Divide } from "lucide-react";
+import Loader from "../../components/Loader";
 
 const Ads = () => {
   const { data, error, isLoading, isFetching, refetch } = useGetAdsQuery();
@@ -89,62 +91,68 @@ const Ads = () => {
   };
 
   return (
-    <div>
-      <PageBreadcrumb pageTitle="Ads" />
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div>
+          <PageBreadcrumb pageTitle="Ads" />
 
-      <Upload
-        accept="image/*"
-        showUploadList={false}
-        beforeUpload={(file) => {
-          // Prevent auto upload, we'll handle manually
-          handleAdd(file);
-          return false; // prevent upload
-        }}
-      >
-        <Button
-          icon={<UploadOutlined />}
-          type="primary"
-          style={{ marginBottom: 20 }}
-        >
-          Add Image (Banner)
-        </Button>
-      </Upload>
-
-      <Row gutter={[16, 16]}>
-        {data?.data?.map(({ id, full_path }) => (
-          <Col key={id} xs={24} sm={12} md={8} lg={6}>
-            <div
-              style={{
-                position: "relative",
-                border: "1px solid #f0f0f0",
-                borderRadius: 4,
-                padding: 8,
-                textAlign: "center",
-              }}
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            beforeUpload={(file) => {
+              // Prevent auto upload, we'll handle manually
+              handleAdd(file);
+              return false; // prevent upload
+            }}
+          >
+            <Button
+              icon={<UploadOutlined />}
+              type="primary"
+              style={{ marginBottom: 20 }}
             >
-              <Image
-                src={full_path}
-                alt={`Ad banner ${id}`}
-                style={{ maxWidth: "100%", maxHeight: 150 }}
-              />
-              <Popconfirm
-                title="Are you sure to delete this banner?"
-                onConfirm={() => handleDelete(id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button
-                  danger
-                  type="text"
-                  icon={<DeleteOutlined />}
-                  style={{ position: "absolute", top: 8, right: 8 }}
-                />
-              </Popconfirm>
-            </div>
-          </Col>
-        ))}
-      </Row>
-    </div>
+              Add Image (Banner)
+            </Button>
+          </Upload>
+
+          <Row gutter={[16, 16]}>
+            {data?.data?.map(({ id, full_path }) => (
+              <Col key={id} xs={24} sm={12} md={8} lg={6}>
+                <div
+                  style={{
+                    position: "relative",
+                    border: "1px solid #f0f0f0",
+                    borderRadius: 4,
+                    padding: 8,
+                    textAlign: "center",
+                  }}
+                >
+                  <Image
+                    src={full_path}
+                    alt={`Ad banner ${id}`}
+                    style={{ maxWidth: "100%", maxHeight: 150 }}
+                  />
+                  <Popconfirm
+                    title="Are you sure to delete this banner?"
+                    onConfirm={() => handleDelete(id)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button
+                      danger
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      style={{ position: "absolute", top: 8, right: 8 }}
+                    />
+                  </Popconfirm>
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </div>
+      )}
+    </>
   );
 };
 

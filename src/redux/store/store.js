@@ -10,6 +10,7 @@ import { categoryApi } from "../api/categoryApi";
 import { propertyApi } from "../api/propertyApi";
 import { AdsApi } from "../api/AdsApi";
 import { UserApi } from "../api/UserApi";
+import { chargeApi } from "../api/chargeApi";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     [propertyApi.reducerPath]: propertyApi.reducer,
     [AdsApi.reducerPath]: AdsApi.reducer,
     [UserApi.reducerPath]: UserApi.reducer,
+    [chargeApi.reducerPath]: chargeApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -37,5 +39,6 @@ export const store = configureStore({
       .concat(categoryApi.middleware)
       .concat(propertyApi.middleware)
       .concat(AdsApi.middleware)
-      .concat(UserApi.middleware),
+      .concat(UserApi.middleware)
+      .concat(chargeApi.middleware),
 });
