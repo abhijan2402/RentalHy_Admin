@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import React, { useState, useEffect, useRef } from "react";
+import JoditEditor from "jodit-react";
 import { Spin, Tabs } from "antd";
-import { useGetCmsQuery, useEditCmsMutation } from "../../redux/api/cmsApi.js";
 import { toast } from "react-toastify";
+import { useGetCmsQuery, useEditCmsMutation } from "../../redux/api/cmsApi.js";
 
 const { TabPane } = Tabs;
 
 const CMSEditor = () => {
+  const editor = useRef(null);
+  const [content, setContent] = useState("");
   const [selectedTab, setSelectedTab] = useState("terms-conditions");
-  const [serverContent, setServerContent] = useState(""); // always store latest API content
+  const [serverContent, setServerContent] = useState("");
 
   const {
     data: cmsData,
@@ -19,48 +20,49 @@ const CMSEditor = () => {
 
   const [editCms, { isLoading: isSaving }] = useEditCmsMutation();
 
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: "", // start empty, we'll set content after API load
-  });
-
-  // When cmsData changes, update state + editor
+  // Load CMS content when API data changes
   useEffect(() => {
-    if (cmsData?.data?.content !== undefined && editor) {
-      setServerContent(cmsData.data.content); // keep API content
-      editor.commands.setContent(cmsData.data.content);
+    if (cmsData?.data?.content !== undefined) {
+      setContent(cmsData.data.content);
+      setServerContent(cmsData.data.content);
     }
-  }, [cmsData, editor]);
+  }, [cmsData]);
 
   // Handle tab change
   const handleTabChange = (key) => {
     setSelectedTab(key);
   };
 
-  // Save content
+  // Save edited content
   const handleSave = async () => {
-    if (!editor) return;
-    const htmlContent = editor.getHTML();
-
     const formdata = new FormData();
-    formdata.append("content", htmlContent);
+    formdata.append("content", content);
 
     try {
       await editCms({ page: selectedTab, formdata }).unwrap();
       toast.success(`Content for ${selectedTab} saved successfully!`);
       refetch();
-    } catch {
+    } catch (err) {
       toast.error("Failed to save content.");
-      if (editor) {
-        editor.commands.setContent(serverContent);
-      }
+      setContent(serverContent);
     }
   };
 
-  const isWaiting = isLoading || !editor;
+  const isWaiting = isLoading;
+
+  // Jodit editor config
+  const config = {
+    readonly: false,
+    height: 400,
+    toolbarSticky: false,
+    uploader: { insertImageAsBase64URI: true },
+    removeButtons: ["about"],
+    placeholder: "Start editing content here...",
+  };
 
   return (
     <>
+      {/* Tabs */}
       <Tabs
         activeKey={selectedTab}
         onChange={handleTabChange}
@@ -68,35 +70,33 @@ const CMSEditor = () => {
         className="mb-4"
       >
         <TabPane tab="Terms & Conditions" key="terms-conditions" />
-        <TabPane tab="Privacy" key="privacy-policy" />
+        <TabPane tab="Privacy Policy" key="privacy-policy" />
+        <TabPane tab="About" key="about" />
       </Tabs>
 
-      <div className="border rounded shadow-md bg-white min-h-[300px]">
+      {/* Editor */}
+      <div className="border rounded shadow-md bg-white min-h-[300px] p-4">
         {isWaiting ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "300px",
-              marginBottom: "10px",
-            }}
-          >
+          <div className="flex justify-center items-center h-[300px]">
             <Spin size="large" />
           </div>
         ) : (
-          <EditorContent
-            editor={editor}
-            className="p-6 min-h-[300px] w-full prose prose-sm sm:prose lg:prose-lg dark:prose-invert dark:bg-gray-900 dark:text-gray-100 bg-white text-gray-900"
+          <JoditEditor
+            ref={editor}
+            value={content}
+            config={config}
+            tabIndex={1}
+            onBlur={(newContent) => setContent(newContent)} // update on blur
           />
         )}
       </div>
 
+      {/* Save Button */}
       <button
         onClick={handleSave}
         className="mt-6 px-4 py-2 bg-blue-500 text-white rounded font-semibold hover:bg-[#FE4C8A] transition-colors text-sm"
         style={{ width: "14%" }}
-        disabled={!editor || isSaving || isWaiting}
+        disabled={isSaving || isWaiting}
       >
         {isSaving ? "Saving..." : "Save"}
       </button>

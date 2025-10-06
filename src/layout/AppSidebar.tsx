@@ -49,12 +49,17 @@ const navItems: NavItem[] = [
   },
   {
     icon: <TableProperties />,
-    name: "Rental Properties",
+    name: "Properties",
     path: "/property",
   },
   {
     icon: <Building2 />,
     name: "Convention Space",
+    path: "/convention",
+  },
+  {
+    icon: <Building2 />,
+    name: "Hostels",
     path: "/convention",
   },
   {
@@ -158,9 +163,9 @@ const AppSidebar: React.FC = () => {
             //   height={40}
             // />
             <div className="flex items-center gap-2 text-primary font-bold text-xl">
-              <Warehouse className="h-6 w-6 text-primary text-[#465FFF]" />
-              <span className="tracking-wide  text-[#465FFF] ">
-                Rental Admin
+              <Warehouse className="h-6 w-6 text-primary text-[#7C0902]" />
+              <span className="tracking-wide  text-[#7C0902] ">
+                To-Let India Admin
               </span>
             </div>
           ) : (
@@ -171,7 +176,7 @@ const AppSidebar: React.FC = () => {
             //   height={32}
             // />
             <div className="flex items-center gap-2 text-primary font-bold text-xl">
-              <Warehouse className="h-6 w-6 text-primary text-[#465FFF]" />
+              <Warehouse className="h-6 w-6 text-primary text-[#7C0902]" />
             </div>
           )}
         </Link>

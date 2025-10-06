@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <>
       <PageMeta
-        title="Rental Services Admin Dashboard"
-        description="Manage your rental services efficiently — track properties, clients, and operations all in one place."
+        title="To-Let India Services Admin Dashboard"
+        description="Manage your To-Let India services efficiently — track properties, clients, and operations all in one place."
       />
 
       {/* Heading Section */}
@@ -18,17 +18,17 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           {/* Heading with icon */}
           <div className="flex items-center gap-3 flex-wrap">
-            <Building2 className="w-8 h-8 text-[#465FFF]" />
-            <h1 className="text-3xl font-extrabold text-[#465FFF] whitespace-nowrap">
-              Rental Services Admin
+            <Building2 className="w-8 h-8 text-[#7C0902]" />
+            <h1 className="text-3xl font-extrabold text-[#7C0902] whitespace-nowrap">
+              To-Let India Services Admin
             </h1>
           </div>
 
           {/* Paragraph with icon below heading */}
           <div className="flex items-start gap-2 text-gray-600 dark:text-gray-400 max-w-xl">
             <p className="text-base sm:text-lg leading-relaxed">
-              Manage rental properties, monitor tenant requests, and handle
-              operations seamlessly — all from one dashboard.
+              Manage To-Let India properties, monitor tenant requests, and
+              handle operations seamlessly — all from one dashboard.
             </p>
           </div>
         </div>
@@ -44,9 +44,7 @@ export default function Home() {
           <MonthlySalesChart />
         </div>
 
-        <div className="col-span-12">
-          {/* <StatisticsChart /> */}
-        </div>
+        <div className="col-span-12">{/* <StatisticsChart /> */}</div>
       </div>
     </>
   );

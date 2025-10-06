@@ -11,6 +11,7 @@ import { propertyApi } from "../api/propertyApi";
 import { AdsApi } from "../api/AdsApi";
 import { UserApi } from "../api/UserApi";
 import { chargeApi } from "../api/chargeApi";
+import { profileApi } from "../api/profilApi";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     [AdsApi.reducerPath]: AdsApi.reducer,
     [UserApi.reducerPath]: UserApi.reducer,
     [chargeApi.reducerPath]: chargeApi.reducer,
+    [profileApi.reducerPath]: profileApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -40,5 +42,6 @@ export const store = configureStore({
       .concat(propertyApi.middleware)
       .concat(AdsApi.middleware)
       .concat(UserApi.middleware)
+      .concat(profileApi.middleware)
       .concat(chargeApi.middleware),
 });

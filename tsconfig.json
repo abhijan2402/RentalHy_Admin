@@ -1,16 +1,20 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "target": "es2016", // Minimum for Array.includes
-    "lib": ["es2016", "dom"], // Add modern JS + browser APIs
-    "jsx": "react-jsx", // React 17+ JSX transform
+    "target": "es2016",
+    "lib": ["es2016", "dom"],
+    "jsx": "react-jsx",
     "skipLibCheck": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+
+    // ✅ Added for JS + TS hybrid usage
+    "allowJs": true, 
+    "checkJs": true
   },
   "include": ["src", "global.d.ts"],
   "exclude": ["node_modules"]

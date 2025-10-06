@@ -26,15 +26,14 @@ const Loader = () => (
       }}
     >
       <HomeOutlined />
-      Rental Admin
+      To-Let India Admin
     </div>
 
     {/* Loader */}
     <Spin size="large" />
 
     {/* Tagline */}
-    <div style={{ marginTop: 16, fontSize: 15, color: "#555" }}>
-    </div>
+    <div style={{ marginTop: 16, fontSize: 15, color: "#555" }}></div>
 
     <style>
       {`

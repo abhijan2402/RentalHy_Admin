@@ -4,7 +4,6 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import AddPropertyModal from "./AddPropertyModal";
 import { useGetPropertiesQuery } from "../../redux/api/propertyApi";
 
-
 const initialProperties = [
   {
     id: 1,
@@ -36,7 +35,7 @@ const initialProperties = [
 const Property = () => {
   const { data, error, isLoading, isFetching } = useGetPropertiesQuery();
 
-  console.log(data)
+  console.log(data);
   const [properties, setProperties] = useState(initialProperties);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -166,7 +165,7 @@ const Property = () => {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Rental Properties" />
+      <PageBreadcrumb pageTitle="To-Let India Properties" />
 
       {/* Add Button */}
       <div className="flex justify-end mb-4">
