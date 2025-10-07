@@ -39,20 +39,8 @@ export const profileApi = createApi({
         url: "reset-password",
         method: "POST",
         body: formData,
-        headers: {
-          "Content-Type": "application/json", // ✅ explicitly set
-        },
       }),
     }),
-
-    // Step 3: Reset Password
-    // resetPassword: builder.mutation({
-    //   query: (formData) => ({
-    //     url: `reset-password`,
-    //     method: "POST",
-    //     body: formData,
-    //   }),
-    // }),
   }),
 });
 
@@ -60,5 +48,4 @@ export const {
   useForgotPasswordMutation,
   useVerifyPasswordMutation,
   useSetPasswordMutation,
-  // useResetPasswordMutation,
 } = profileApi;

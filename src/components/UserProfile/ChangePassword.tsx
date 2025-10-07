@@ -22,8 +22,7 @@ const ChangePassword = ({
     useForgotPasswordMutation();
   const [verifyPassword, { isLoading: verifyLoading }] =
     useVerifyPasswordMutation();
-  // const [resetPassword, { isLoading: resetLoading }] =
-  //   useResetPasswordMutation();
+
   const [setPassword, { isLoading: resetLoading }] = useSetPasswordMutation();
 
   // ✅ Prefill email when modal opens or user changes
@@ -32,7 +31,7 @@ const ChangePassword = ({
       form.setFieldsValue({ email: user.email });
       setEmail(user.email);
     }
-  }, [user, form]);
+  }, [user, form, isPasswordModalVisible]);
 
   // Step 1: Forgot Password
   const handleForgotPassword = async () => {
