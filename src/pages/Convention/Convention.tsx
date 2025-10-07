@@ -33,7 +33,7 @@ const initialProperties = [
 ];
 
 const Convention = () => {
-  const { data, error, isLoading, isFetching } = useGetPropertiesQuery();
+  const { data, error, isLoading, isFetching } = useGetPropertiesQuery("");
 
   console.log(data);
   const [properties, setProperties] = useState(initialProperties);

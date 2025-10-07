@@ -13,7 +13,7 @@ import Loader from "../../components/Loader";
 
 const Tickets = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
-  const { data: ticketList, isLoading } = useGetTicketListQuery();
+  const { data: ticketList, isLoading } = useGetTicketListQuery({});
   const [replyToTicket, { isLoading: isSaving }] = useReplyToTicketMutation();
 
   const [tickets, setTickets] = useState([]);

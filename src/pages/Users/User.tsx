@@ -68,7 +68,7 @@ const User = () => {
   const [users, setUsers] = useState(initialUsers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const { data, error, isLoading, isFetching, refetch } = useGetUsersQuery();
+  const { data, error, isLoading, isFetching, refetch } = useGetUsersQuery({});
   const [deleteUser] = useDeleteUserMutation();
   const [updateUserStatus] = useUpdateUserStatusMutation();
   console.log(error);

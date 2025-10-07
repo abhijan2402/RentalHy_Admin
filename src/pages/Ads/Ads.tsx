@@ -16,7 +16,7 @@ import { Divide } from "lucide-react";
 import Loader from "../../components/Loader";
 
 const Ads = () => {
-  const { data, error, isLoading, isFetching, refetch } = useGetAdsQuery();
+  const { data, error, isLoading, isFetching, refetch } = useGetAdsQuery("");
   const [addAd] = useAddAdMutation();
   const [deleteAd] = useDeleteAdMutation();
   console.log(data?.data);

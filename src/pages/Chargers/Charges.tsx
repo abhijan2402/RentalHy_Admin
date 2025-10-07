@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 
 const Charges = () => {
-  const { data: apiCharges, isLoading } = useGetChargesQuery();
+  const { data: apiCharges, isLoading } = useGetChargesQuery("");
   const [addCharges, { isLoading: isSaving }] = useAddChargesMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();

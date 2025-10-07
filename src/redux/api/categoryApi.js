@@ -5,7 +5,12 @@ export const categoryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL,
   }),
-  tagTypes: ["Category", "SubCategory"],
+  tagTypes: [
+    "Category",
+    "SubCategory",
+    "ServicesSubCategory",
+    "ServicesCategory",
+  ],
   endpoints: (builder) => ({
     // ---------- PRODUCT MAIN CATEGORY ----------
     getCategoryList: builder.query({
