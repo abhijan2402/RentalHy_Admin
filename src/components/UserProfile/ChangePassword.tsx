@@ -1,11 +1,10 @@
-// @ts-check
 import React, { useEffect, useState } from "react";
 import { Form, Input, Modal, Button } from "antd";
 import { toast } from "react-toastify";
 import {
   useForgotPasswordMutation,
   useVerifyPasswordMutation,
-  useResetPasswordMutation,
+  useSetPasswordMutation,
 } from "../../redux/api/profilApi";
 import { useAuth } from "../../context/AuthContext";
 
@@ -23,8 +22,9 @@ const ChangePassword = ({
     useForgotPasswordMutation();
   const [verifyPassword, { isLoading: verifyLoading }] =
     useVerifyPasswordMutation();
-  const [resetPassword, { isLoading: resetLoading }] =
-    useResetPasswordMutation();
+  // const [resetPassword, { isLoading: resetLoading }] =
+  //   useResetPasswordMutation();
+  const [setPassword, { isLoading: resetLoading }] = useSetPasswordMutation();
 
   // ✅ Prefill email when modal opens or user changes
   useEffect(() => {
@@ -84,7 +84,11 @@ const ChangePassword = ({
       formData.append("otp", otp);
       formData.append("new_password", values.newPassword);
 
-      await resetPassword(formData).unwrap();
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(`${key}:`, value);
+      // }
+
+      await setPassword(formData).unwrap();
 
       toast.success("Password reset successful");
       setIsPasswordModalVisible(false);

@@ -10,6 +10,7 @@ export const profileApi = createApi({
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
+
       return headers;
     },
   }),
@@ -33,19 +34,31 @@ export const profileApi = createApi({
       }),
     }),
 
-    // Step 3: Reset Password
-    resetPassword: builder.mutation({
+    setPassword: builder.mutation({
       query: (formData) => ({
-        url: `reset-password`,
+        url: "reset-password",
         method: "POST",
         body: formData,
+        headers: {
+          "Content-Type": "application/json", // ✅ explicitly set
+        },
       }),
     }),
+
+    // Step 3: Reset Password
+    // resetPassword: builder.mutation({
+    //   query: (formData) => ({
+    //     url: `reset-password`,
+    //     method: "POST",
+    //     body: formData,
+    //   }),
+    // }),
   }),
 });
 
 export const {
   useForgotPasswordMutation,
   useVerifyPasswordMutation,
-  useResetPasswordMutation,
+  useSetPasswordMutation,
+  // useResetPasswordMutation,
 } = profileApi;
