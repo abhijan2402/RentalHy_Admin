@@ -1,77 +1,43 @@
 import { useState } from "react";
-import { Table, Button, Switch, Image, message } from "antd";
+import { Table, Button, Switch, Image, Modal } from "antd";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import AddPropertyModal from "./AddPropertyModal";
 import { useGetPropertiesQuery } from "../../redux/api/propertyApi";
-
-const initialProperties = [
-  {
-    id: 1,
-    name: "Luxury Villa",
-    owner: "John Doe",
-    status: "Disapproved",
-    location: "Hyderabad",
-    address: "Plot No. 12, Jubilee Hills, Hyderabad, Telangana, India",
-    enabled: true,
-    highlighted: true,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9xkKKotJCQl9xrAZ2I3w5FXzu7IFBPA7hRw&s",
-  },
-  {
-    id: 2,
-    name: "Downtown Apartment",
-    owner: "Jane Smith",
-    status: "Approved",
-    location: "Mumbai",
-    address:
-      "Flat 402, Marine Drive Apartments, Churchgate, Mumbai, Maharashtra, India",
-    enabled: false,
-    highlighted: false,
-    image:
-      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=100&q=80",
-  },
-];
+import { toast } from "react-toastify";
+import { useSetPropertyHighlightMutation } from "../../redux/api/profilApi";
 
 const Property = () => {
-  const { data, error, isLoading, isFetching } = useGetPropertiesQuery({});
-
-  console.log(data);
-  const [properties, setProperties] = useState(initialProperties);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  const { data, error, isLoading, refetch } = useGetPropertiesQuery({
+    page,
+    per_page: pageSize,
+  });
+  const [setPropertyHighlight, { isLoading: isHighlightLoading }] =
+    useSetPropertyHighlightMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
 
-  const toggleEnable = (id: number) => {
-    setProperties((prev) =>
-      prev.map((prop) =>
-        prop.id === id ? { ...prop, enabled: !prop.enabled } : prop
-      )
-    );
-    message.success("Property enable status changed");
+  const toggleHighlighted = async (record: any) => {
+    try {
+      const newValue = record.is_highlighted ? "0" : "1";
+
+      const formData = new FormData();
+      formData.append("is_highlighted", newValue);
+
+      await setPropertyHighlight({ id: record.id, formData }).unwrap();
+      refetch();
+
+      toast.success("Property highlighted status changed");
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to change highlighted status");
+    }
   };
 
-  const toggleHighlighted = (id: number) => {
-    setProperties((prev) =>
-      prev.map((prop) =>
-        prop.id === id ? { ...prop, highlighted: !prop.highlighted } : prop
-      )
-    );
-    message.success("Property highlighted status changed");
-  };
-
-  const changeStatus = (id: number, newStatus: string) => {
-    setProperties((prev) =>
-      prev.map((prop) =>
-        prop.id === id ? { ...prop, status: newStatus } : prop
-      )
-    );
-    message.success(`Property status changed to ${newStatus}`);
-  };
-
-  const handleAddProperty = (newProperty: any) => {
-    setProperties((prev) => [
-      ...prev,
-      { ...newProperty, id: Date.now() }, // unique ID
-    ]);
-    message.success("Property added successfully");
+  const handleView = (record: any) => {
+    setSelectedProperty(record);
+    setIsModalOpen(true);
   };
 
   const columns = [
@@ -79,60 +45,46 @@ const Property = () => {
       title: "Image",
       dataIndex: "image",
       key: "image",
-      render: (url: string) => <Image width={80} src={url} alt="Property" />,
+      render: (url: string, record: any) => (
+        <Image
+          width={80}
+          height={40}
+          src={record.images?.[0]?.image_url || url}
+          alt="Property"
+        />
+      ),
     },
-    { title: "Property Name", dataIndex: "name", key: "name" },
-    { title: "Owner", dataIndex: "owner", key: "owner" },
+    { title: "Property Name", dataIndex: "title", key: "title" },
+    {
+      title: "Owner",
+      dataIndex: ["user", "name"],
+      key: "owner",
+      render: (name: string) => name || "N/A",
+    },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
       render: (value: string) => <div>{value || "Hyderabad"}</div>,
     },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      render: (value: string) => <div className="max-w-[200px]">{value}</div>,
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status: string) => (
-        <span
-          style={{
-            color: status === "Approved" ? "green" : "red",
-            fontWeight: "bold",
-          }}
-        >
-          {status}
-        </span>
-      ),
-    },
-    {
-      title: "Enabled",
-      dataIndex: "enabled",
-      key: "enabled",
-      render: (enabled: any, record: any) => (
-        <Switch
-          checked={enabled}
-          onChange={() => toggleEnable(record.id)}
-          checkedChildren="Enabled"
-          unCheckedChildren="Disabled"
-        />
-      ),
-    },
+    // {
+    //   title: "Address",
+    //   dataIndex: "address",
+    //   key: "address",
+    //   render: (value: string) => (
+    //     <div className="max-w-[200px]">{value || "No address"}</div>
+    //   ),
+    // },
     {
       title: "Highlighted",
-      dataIndex: "highlighted",
+      dataIndex: "is_highlighted",
       key: "highlighted",
-      render: (highlighted: any, record: any) => (
+      render: (highlighted: number, record: any) => (
         <Switch
-          checked={highlighted}
+          checked={!!highlighted}
           onChange={() => toggleHighlighted(record.id)}
-          checkedChildren="Enabled"
-          unCheckedChildren="Disabled"
+          checkedChildren="Yes"
+          unCheckedChildren="No"
         />
       ),
     },
@@ -140,34 +92,26 @@ const Property = () => {
       title: "Action",
       key: "action",
       render: (_: any, record: any) => (
-        <>
-          {record.status === "Approved" ? (
-            <Button
-              type="default"
-              onClick={() => changeStatus(record.id, "Disapproved")}
-              style={{ marginRight: 8 }}
-            >
-              Disapprove
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              onClick={() => changeStatus(record.id, "Approved")}
-              style={{ marginRight: 8 }}
-            >
-              Approve
-            </Button>
-          )}
-        </>
+        <div className="flex gap-2">
+          <Button type="default" onClick={() => toggleHighlighted(record)}>
+            {record.is_highlighted ? "Unhighlight" : "Highlight"}
+          </Button>
+
+          <Button type="default" onClick={() => handleView(record)}>
+            View
+          </Button>
+        </div>
       ),
     },
   ];
+
+  const paginationData = data?.data || {};
 
   return (
     <div>
       <PageBreadcrumb pageTitle="To-Let India Properties" />
 
-      {/* Add Button */}
+      {/* Add Property Button */}
       <div className="flex justify-end mb-4">
         <Button
           type="primary"
@@ -180,22 +124,81 @@ const Property = () => {
 
       <Table
         columns={columns}
-        dataSource={properties}
+        dataSource={data?.data?.data}
         rowKey="id"
+        loading={isLoading}
         pagination={{
-          pageSizeOptions: ["5", "10", "15"],
+          current: paginationData?.current_page || page,
+          pageSize: paginationData?.per_page || pageSize,
+          total: paginationData?.total || 0,
           showSizeChanger: true,
-          defaultPageSize: 5,
+          pageSizeOptions: ["10", "25", "50", "100"],
+          // showTotal: (total, range) => `${range[0]}–${range[1]} of ${total}`,
+          onChange: (newPage, newPageSize) => {
+            setPage(newPage);
+            setPageSize(newPageSize);
+          },
         }}
         scroll={{ x: 1000 }}
       />
 
-      {/* Modal */}
-      <AddPropertyModal
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        onAdd={handleAddProperty}
-      />
+      {/* View Property Modal */}
+      <Modal
+        title={selectedProperty?.title || "Property Details"}
+        open={isModalOpen && !!selectedProperty}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setSelectedProperty(null);
+        }}
+        footer={null}
+        width={600}
+      >
+        {selectedProperty ? (
+          <div className="space-y-3">
+            <Image
+              width={120}
+              src={selectedProperty.images?.[0]?.image_url}
+              alt="Property"
+            />
+            <p>
+              <strong>Owner:</strong> {selectedProperty.user?.name || "N/A"}
+            </p>
+            <p>
+              <strong>Location:</strong> {selectedProperty.location}
+            </p>
+            <p>
+              <strong>BHK:</strong> {selectedProperty.bhk}
+            </p>
+            <p>
+              <strong>Price:</strong> ₹{selectedProperty.price}
+            </p>
+            <p>
+              <strong>Furnishing:</strong> {selectedProperty.furnishing_status}
+            </p>
+            <p>
+              <strong>Availability:</strong> {selectedProperty.availability}
+            </p>
+            <p>
+              <strong>Preferred Tenant:</strong>{" "}
+              {selectedProperty.preferred_tenant_type}
+            </p>
+            <p>
+              <strong>Bathrooms:</strong> {selectedProperty.bathrooms}
+            </p>
+            <p>
+              <strong>Parking:</strong> {selectedProperty.parking_available}
+            </p>
+            <p>
+              <strong>Advance:</strong> {selectedProperty.advance}
+            </p>
+            <p>
+              <strong>Facing:</strong> {selectedProperty.facing_direction}
+            </p>
+          </div>
+        ) : (
+          <p>No property details found.</p>
+        )}
+      </Modal>
     </div>
   );
 };

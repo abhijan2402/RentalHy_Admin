@@ -16,10 +16,13 @@ import ProtectedRoute from "./context/ProtectedRoute";
 import Convention from "./pages/Convention/Convention";
 import Charges from "./pages/Chargers/Charges";
 import CMSPage from "./pages/CMS/CMS";
+import Hostel from "./pages/Hostel/Hostel";
+import Farm from "./pages/Farm/Farm";
+import AdVideo from "./pages/AdVideo/AdVideo";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/admin">
       <ScrollToTop />
 
       <Routes>
@@ -38,11 +41,14 @@ export default function App() {
           <Route index path="/" element={<Home />} />
           <Route index path="/users" element={<User />} />
           <Route index path="/property" element={<Property />} />
+          <Route index path="/hostels" element={<Hostel />} />
           <Route index path="/convention" element={<Convention />} />
+          <Route index path="/farm" element={<Farm />} />
           <Route index path="/ads" element={<Ads />} />
           <Route index path="/tickets" element={<Tickets />} />
           <Route index path="/charges" element={<Charges />} />
           <Route index path="/cms" element={<CMSPage />} />
+          <Route index path="/demo-video" element={<AdVideo />} />
 
           {/* Others Page */}
           <Route path="/profile" element={<UserProfiles />} />

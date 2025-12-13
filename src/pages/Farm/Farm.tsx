@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { Table, Button, Image } from "antd";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import { useGetConventionQuery } from "../../redux/api/propertyApi";
-import ViewConventionModal from "./ViewConventionModal";
+import { useGetFarmQuery } from "../../redux/api/propertyApi";
+import ViewFarmModal from "./ViewFarmModal";
 
-const Convention = () => {
+const Farm = () => {
   // pagination state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
 
   // API call with pagination params
-  const { data, error, isLoading } = useGetConventionQuery({
+  const { data, error, isLoading } = useGetFarmQuery({
     page,
     per_page: pageSize,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedConvention, setSelectedConvention] = useState<any>(null);
+  const [selectedFarm, setSelectedFarm] = useState<any>(null);
 
   const handleView = (record: any) => {
-    setSelectedConvention(record);
+    setSelectedFarm(record);
     setIsModalOpen(true);
   };
 
@@ -33,11 +33,11 @@ const Convention = () => {
           width={60}
           height={40}
           src={record.images_grouped?.hall?.[0]?.image_path || url}
-          alt="Convention"
+          alt="Farm"
         />
       ),
     },
-    { title: "Convention Name", dataIndex: "title", key: "title" },
+    { title: "Farm Name", dataIndex: "title", key: "title" },
     {
       title: "Location",
       dataIndex: "location",
@@ -70,7 +70,7 @@ const Convention = () => {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Convention/Function Hall" />
+      <PageBreadcrumb pageTitle="Resort/Farm" />
 
       <Table
         columns={columns}
@@ -92,14 +92,14 @@ const Convention = () => {
         scroll={{ x: 1000 }}
       />
 
-      <ViewConventionModal
+      <ViewFarmModal
         isModalOpen={isModalOpen}
-        selectedConvention={selectedConvention}
+        selectedFarm={selectedFarm}
         setIsModalOpen={setIsModalOpen}
-        setSelectedConvention={setSelectedConvention}
+        setSelectedFarm={setSelectedFarm}
       />
     </div>
   );
 };
 
-export default Convention;
+export default Farm;

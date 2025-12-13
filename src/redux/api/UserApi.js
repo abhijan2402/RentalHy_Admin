@@ -27,7 +27,10 @@ export const UserApi = createApi({
 
     // Get All Users
     getUsers: builder.query({
-      query: (status) => (status ? `user/list?status=${status}` : "user/list"),
+      query: (queryParams) =>
+        queryParams
+          ? `user/list?per_page=${queryParams?.per_page}&page=${queryParams?.page}`
+          : "user/list",
       providesTags: ["User"],
     }),
 
@@ -56,7 +59,7 @@ export const UserApi = createApi({
       query: ({ id, formdata }) => ({
         url: `change/status/${id}`,
         method: "POST",
-        body: formdata ,
+        body: formdata,
       }),
       invalidatesTags: ["User"],
     }),

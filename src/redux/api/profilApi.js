@@ -41,6 +41,13 @@ export const profileApi = createApi({
         body: formData,
       }),
     }),
+    setPropertyHighlight: builder.mutation({
+      query: ({ id, formData }) => ({
+        url: `property-update/${id}`,
+        method: "POST",
+        body: formData,
+      }),
+    }),
   }),
 });
 
@@ -48,4 +55,5 @@ export const {
   useForgotPasswordMutation,
   useVerifyPasswordMutation,
   useSetPasswordMutation,
+  useSetPropertyHighlightMutation,
 } = profileApi;

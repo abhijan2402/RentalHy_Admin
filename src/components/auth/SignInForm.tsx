@@ -132,15 +132,15 @@ export default function SignInForm() {
                     className="
                   w-full
                   py-3
-                  bg-blue-600
+                  bg-[#7C0902]
                   text-white
                   font-semibold
                   rounded-lg
                   shadow-md
-                  hover:bg-blue-700
+                  hover:[#7C0902]
                   focus:outline-none
                   focus:ring-2
-                  focus:ring-blue-400
+                  focus:ring-[#7C0902]
                   focus:ring-opacity-75
                   transition
                   duration-200

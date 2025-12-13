@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Button,
@@ -68,10 +68,41 @@ const User = () => {
   const [users, setUsers] = useState(initialUsers);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const { data, error, isLoading, isFetching, refetch } = useGetUsersQuery({});
+
+  const [queryParams, setQueryParams] = useState({
+    page: 1,
+    per_page: 15,
+  });
+  const { data, error, isLoading, isFetching, refetch } =
+    useGetUsersQuery(queryParams);
   const [deleteUser] = useDeleteUserMutation();
   const [updateUserStatus] = useUpdateUserStatusMutation();
   console.log(error);
+
+  const [tablePagination, setTablePagination] = useState({
+    current: 1,
+    pageSize: 15,
+    total: 0,
+  });
+
+  useEffect(() => {
+    if (data?.pagination) {
+      setTablePagination({
+        current: data.pagination.current_page,
+        pageSize: data.pagination.per_page,
+        total: data.pagination.total,
+      });
+    }
+  }, [data]);
+
+  const handleTableChange = (pagination) => {
+    setQueryParams({
+      page: pagination.current,
+      per_page: pagination.pageSize,
+    });
+  };
+
+  console.log(tablePagination);
 
   // Deletuser Handler
   const handleDelete = (id: String) => {
@@ -196,11 +227,8 @@ const User = () => {
         <div
           // className="main-content"
           style={{
-            // overflowX: "auto",
-            // transition: "margin-left 0.3s",
             marginLeft: isExpanded || isHovered ? 0 : 0,
-            // width: `calc(100vw - ${isExpanded || isHovered ? 290 : 90}px)`,
-            // width: `${isExpanded}`,
+
             width: isExpanded || isHovered ? "1180px" : "",
           }}
         >
@@ -222,10 +250,13 @@ const User = () => {
               columns={columns}
               dataSource={data?.data}
               rowKey="id"
+              onChange={handleTableChange}
               pagination={{
-                pageSizeOptions: ["5", "10", "15"],
+                current: tablePagination.current,
+                pageSize: tablePagination.pageSize,
+                total: tablePagination.total,
                 showSizeChanger: true,
-                defaultPageSize: 5,
+                pageSizeOptions: ["5", "10", "15", "25", "50"],
               }}
               scroll={{ x: 1000 }}
             />

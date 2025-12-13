@@ -54,13 +54,18 @@ const navItems: NavItem[] = [
   },
   {
     icon: <Building2 />,
-    name: "Convention Space",
+    name: "Convention/Function Hall",
     path: "/convention",
   },
   {
     icon: <Building2 />,
+    name: "Resort/Farm",
+    path: "/farm",
+  },
+  {
+    icon: <Building2 />,
     name: "Hostels",
-    path: "/convention",
+    path: "/hostels",
   },
   {
     icon: <TvIcon />,
@@ -81,6 +86,11 @@ const navItems: NavItem[] = [
     icon: <Settings />,
     name: "CMS",
     path: "/cms",
+  },
+  {
+    icon: <Settings />,
+    name: "Demo Video",
+    path: "/demo-video",
   },
 ];
 
@@ -196,7 +206,7 @@ const AppSidebar: React.FC = () => {
               <HorizontaLDots className="size-6" />
             )}
           </h2>
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-col gap-1">
             {navItems.map((nav, index) => (
               <li key={nav.name}>
                 {nav.subItems ? (
